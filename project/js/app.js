@@ -11,7 +11,7 @@ Játék szabályok:
 
 */
 
-var pontszamok, korpontszamok, aktivjatekos, kocka, jatekfolyamatban;
+var pontszamok, korpontszamok, aktivjatekos, card, jatekfolyamatban;
 
 init();
 
@@ -23,15 +23,15 @@ function gomb() {
   
   if (jatekfolyamatban)
   {
-    kocka = Math.floor(Math.random() * 6) + 1;
+    card = Math.floor(Math.random() * 6) + 1;
 
-    var kockadom = document.querySelector('.dice');
-    kockadom.style.display = 'block';
-    kockadom.src = 'img/dice-' + kocka + '.png';
+    var carddom = document.querySelector('.card');
+    carddom.style.display = 'block';
+    carddom.src = 'img/cards/' + card + '.card.png';
 
-    if (kocka !== 1)
+    if (card !== 1)
     {
-      korpontszamok += kocka;
+      korpontszamok += card;
       document.querySelector('#current-' + aktivjatekos).textContent = korpontszamok; 
     }   
     else
@@ -74,7 +74,7 @@ function kovetkezojatekos() {
   document.querySelector('.player-0-panel').classList.toggle('active');
   document.querySelector('.player-1-panel').classList.toggle('active');
 
-  document.querySelector('.dice').style.display = 'none'
+  document.querySelector('.card').style.display = 'none'
 }
 
 function init() 
@@ -83,7 +83,7 @@ function init()
   pontszamok = [0,0];
   korpontszamok = 0;
   aktivjatekos = 0;
-  document.querySelector('.dice').style.display = 'none';
+  document.querySelector('.card').style.display = 'none';
   document.getElementById('score-0').textContent = '0';
   document.getElementById('current-0').textContent = '0';
   document.getElementById('score-1').textContent = '0';
