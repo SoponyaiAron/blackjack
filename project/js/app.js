@@ -1,101 +1,96 @@
-/*
-Játék szabályok:
 
-- A játék 2 szereplős és körökre osztott
-- Minden egyes körben az adott játékos dob a kockával, ahányszor csak szeretne. A dobások eredménye hozzáadódik a játékos adott körben
-  elért pontszámához, ami értelem szerűen minden körben nulláról indul.
-- Ha az aktuális játékos 1-et dob, akkor az összes addigi pontja elveszik, és átadja a dobás jogát a következő játékosnak.
-- A játékos választhatja a 'Megtartom' gombot is. Ebben az esetben az adott körben elért pontok száma, hozzáadódik a játékos összes
-  pontszámához. Majd a dobás joga a másik játékosra száll.
-- Az a játékos nyer, aki előbb eléri a 100 pontot.  
-
-*/
-
-var pontszamok, korpontszamok, aktivjatekos, card, jatekfolyamatban;
+var card, jatekfolyamatban;
 
 init();
-
-
-//document.querySelector('#current-' + aktivjatekos).textContent = kocka; 
-//document.querySelector('#current-' + aktivjatekos).innerHTML '<u>' + kocka + '</u>';    
 
 function gomb() {
   
   if (jatekfolyamatban)
   {
-    card = Math.floor(Math.random() * 6) + 1;
+    card = Math.floor(Math.random() * 10) + 2;
 
-    var carddom = document.querySelector('.card');
-    carddom.style.display = 'block';
-    carddom.src = 'img/cards/' + card + '.card.png';
-
-    if (card !== 1)
+    if (card == 10)
     {
-      korpontszamok += card;
-      document.querySelector('#current-' + aktivjatekos).textContent = korpontszamok; 
-    }   
+      secondary = Math.floor(Math.random() * 16) + 1;
+    }
     else
     {
-      kovetkezojatekos();
+      secondary = Math.floor(Math.random() * 4) + 1;
+    }
+    var carddom2 = document.querySelector('.card2');
+    carddom2.style.display = 'block';
+    carddom2.src = 'img/cards/' + card + '-' + secondary +'.card.png';
+    pscr += card;
+    document.querySelector('#current-1').textContent = pscr; 
+    if (pscr >= 21 && card == 11)
+    {
+      pscr -= 10;
+    }
+    if (pscr >= 22)
+    {
+      document.querySelector('#name-1').textContent = 'Vesztes!';
+      document.querySelector('.player-1-panel').classList.add("ender");
+      jatekfolyamatban = false;
     }
   }
 }
 
 document.querySelector('.btn-roll').addEventListener('click', gomb);
 
-function tart() {
-  pontszamok[aktivjatekos] += korpontszamok;
-
-  document.querySelector('#score-' + aktivjatekos).textContent = pontszamok[aktivjatekos];
-
-  if (pontszamok[aktivjatekos >= 10])
+function tart()
+{
+  if (jatekfolyamatban)
   {
-    document.querySelector('#name-  ' + aktivjatekos).textContent = 'Győztes!';
-    document.querySelector('.player-' + aktivjatekos + '-panel').classList.add("winner!");
-    document.querySelector('.player-' + aktivjatekos + '-panel').classList.remove('active');
-    jatekfolyamatban = false;
-  }
-  else
-  {
-    kovetkezojatekos();   
+    while (house <= pscr)
+    {
+      card = Math.floor(Math.random() * 10) + 2;
+
+      if (card == 10)
+      {
+        secondary = Math.floor(Math.random() * 16) + 1;
+      }
+      else
+      {
+        secondary = Math.floor(Math.random() * 4) + 1;
+      }
+      var carddom = document.querySelector('.card');
+      carddom.style.display = 'block';
+      carddom.src = 'img/cards/' + card + '-' + secondary +'.card.png';
+      house += card;
+      document.querySelector('#current-0').textContent = house;
+    }
+    if (pscr == 21 || house <= pscr || house >= 21)
+    {
+      document.querySelector('#name-1').textContent = 'Győztes!';
+      document.querySelector('.player-1-panel').classList.add("win");
+      jatekfolyamatban = false;
+    }
+    else
+    {
+      document.querySelector('#name-1').textContent = 'Vesztes!';
+      document.querySelector('.player-1-panel').classList.add("ender");
+      jatekfolyamatban = false;
+    } 
   }
 }
 
 document.querySelector('.btn-hold').addEventListener('click', tart); 
 
-function kovetkezojatekos() {
-
-  aktivjatekos === 0 ? aktivjatekos = 1 : aktivjatekos = 0;
-  korpontszamok =  0;
-
-  document.getElementById('current-0').textContent = '0';
-  document.getElementById('current-1').textContent = 0;
-
-  document.querySelector('.player-0-panel').classList.toggle('active');
-  document.querySelector('.player-1-panel').classList.toggle('active');
-
-  document.querySelector('.card').style.display = 'none'
-}
-
 function init() 
 {
+  dealerstart = Math.floor(Math.random() * 10) + 2;
   jatekfolyamatban = true;
-  pontszamok = [0,0];
-  korpontszamok = 0;
-  aktivjatekos = 0;
-  document.querySelector('.card').style.display = 'none';
-  document.getElementById('score-0').textContent = '0';
-  document.getElementById('current-0').textContent = '0';
-  document.getElementById('score-1').textContent = '0';
+  var carddom = document.querySelector('.card');
+    carddom.style.display = 'block';
+    carddom.src = 'img/cards/' + dealerstart + '-1.card.png';
+  pscr = 0;
+  house = dealerstart;
+  document.getElementById('current-0').textContent = dealerstart;
   document.getElementById('current-1').textContent = '0';
-
-  document.querySelector('#name-0').textContent = 'House';
-  document.querySelector('#name-1').textContent = 'Player';
-  document.querySelector('.player-0-panel').classList.remove("winner!");
-  document.querySelector('.player-1-panel').classList.remove('winner!');
-  document.querySelector('.player-0-panel').classList.remove("active");
-  document.querySelector('.player-1-panel').classList.remove('active'); 
-  document.querySelector('.player-0-panel').classList.add("active");
+  document.querySelector('#name-0').textContent = 'Díler';
+  document.querySelector('#name-1').textContent = 'Játékos';
+  document.querySelector('.player-1-panel').classList.remove('win');
+  document.querySelector('.player-1-panel').classList.remove('ender');
 }
 
 document.querySelector('.btn-new').addEventListener('click', init);
